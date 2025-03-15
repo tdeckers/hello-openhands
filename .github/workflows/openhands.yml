@@ -1,0 +1,28 @@
+name: OpenHands Integration
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  openhands:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup OpenHands
+        uses: all-hands/openhands-action@v1
+        with:
+          # Configure OpenHands settings as needed
+          # For example:
+          # token: ${{ secrets.OPENHANDS_TOKEN }}
+          # config-file: .openhands.yml
+
+      - name: Run OpenHands
+        run: openhands run
+        # Additional environment variables or configuration can be added here
