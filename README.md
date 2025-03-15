@@ -25,7 +25,3 @@ Clone this repository and use it with OpenHands to test git functionality:
 ```bash
 git clone https://git.ducbase.com/tdeckers/hello-openhands.git
 ```
-
-## License
-
-[MIT](LICENSE)
