@@ -1,28 +1,33 @@
-name: OpenHands Integration
+name: Resolve Issue with OpenHands
 
 on:
-  push:
-    branches: [ master, main ]
+  issues:
+    types: [labeled]
   pull_request:
-    branches: [ master, main ]
+    types: [labeled]
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  pull_request_review:
+    types: [submitted]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
 
 jobs:
-  openhands:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - name: Setup OpenHands
-        uses: all-hands/openhands-action@v1
-        with:
-          # Configure OpenHands settings as needed
-          # For example:
-          # token: ${{ secrets.OPENHANDS_TOKEN }}
-          # config-file: .openhands.yml
-
-      - name: Run OpenHands
-        run: openhands run
-        # Additional environment variables or configuration can be added here
+  call-openhands-resolver:
+    uses: All-Hands-AI/OpenHands/.github/workflows/openhands-resolver.yml@main
+    with:
+      macro: ${{ vars.OPENHANDS_MACRO || '@openhands-agent' }}
+      max_iterations: ${{ fromJson(vars.OPENHANDS_MAX_ITER || 50) }}
+      base_container_image: ${{ vars.OPENHANDS_BASE_CONTAINER_IMAGE || '' }}
+      LLM_MODEL: ${{ vars.LLM_MODEL || 'anthropic/claude-3-7-sonnet-latest' }}
+      target_branch: ${{ vars.TARGET_BRANCH || 'main' }}
+    secrets:
+      PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+      PAT_USERNAME: ${{ secrets.PAT_USERNAME }}
+      LLM_API_KEY: ${{ secrets.ANTHROPIC_APIKEY }}
+      # LLM_BASE_URL: ${{ secrets.LLM_BASE_URL }}
